@@ -1,0 +1,38 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "clang++ build main",
+            "command": "clang++",
+            "args": [
+                "-std=c++11",
+                "-stdlib=libc++",
+                "-lglfw3",
+                "-framework",
+                "CoreVideo",
+                "-framework",
+                "OpenGL",
+                "-framework",
+                "IOKit",
+                "-framework",
+                "Cocoa",
+                "-framework",
+                "Carbon",
+                "-I",
+                "${workspaceFolder}/src",
+                // "${workspaceFolder}/lib/*.cpp",
+                "${workspaceFolder}/lib/*.c",
+                "${workspaceFolder}/src/*.cpp",
+                "${workspaceFolder}/main.cpp",
+                "-o",
+                "${workspaceFolder}/bin/main",
+                "-g",
+                "-v"
+            ]
+            // "options": {
+            //     "cwd": "/usr/bin"
+            // }
+        }
+    ],
+    "version": "2.0.0"
+}
