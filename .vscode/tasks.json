@@ -20,7 +20,6 @@
                 "Carbon",
                 "-I",
                 "${workspaceFolder}/src",
-                // "${workspaceFolder}/lib/*.cpp",
                 "${workspaceFolder}/lib/*.c",
                 "${workspaceFolder}/src/*.cpp",
                 "${workspaceFolder}/main.cpp",
@@ -28,10 +27,11 @@
                 "${workspaceFolder}/bin/main",
                 "-g",
                 "-v"
-            ]
-            // "options": {
-            //     "cwd": "/usr/bin"
-            // }
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ],
     "version": "2.0.0"
