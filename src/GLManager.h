@@ -5,10 +5,10 @@
 
 struct EngineColor
 {
-    float r;
-    float g;
-    float b;
-    float alpha;
+    GLfloat r;
+    GLfloat g;
+    GLfloat b;
+    GLfloat alpha;
 };
 
 class GLManager

@@ -3,14 +3,12 @@
 using namespace std;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
-//构造函数
 GLManager::GLManager(int mWidth, int mHeight)
 {
     width = mWidth;
     height = mHeight;
 }
 
-//析构函数
 GLManager::~GLManager()
 {
     terminate();

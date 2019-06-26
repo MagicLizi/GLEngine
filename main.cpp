@@ -1,6 +1,8 @@
 #include <iostream>
 #include "GLManager.h"
+#include "ShaderManager.h"
 using namespace std;
+
 int main()
 {
     cout << "Begin GLEngine" << endl;
