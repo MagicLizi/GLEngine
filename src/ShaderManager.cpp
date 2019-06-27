@@ -1,7 +1,8 @@
 #include "ShaderManager.h"
-
-ShaderManager::ShaderManager(string name)
+ShaderManager::ShaderManager(string name, ConfigUniform m_cufun = NULL)
 {
+    cufun = m_cufun;
+
     GLuint vertexShader = loadShader(loadShaderCode(basicPath + name + ".vert"), GL_VERTEX_SHADER);
     GLuint fragmentShader = loadShader(loadShaderCode(basicPath + name + ".frag"), GL_FRAGMENT_SHADER);
 
@@ -80,4 +81,8 @@ GLuint ShaderManager::loadShaderProgram(list<GLuint> shaders)
 void ShaderManager::useShader()
 {
     glUseProgram(shaderProgram);
+    if (cufun != NULL)
+    {
+        cufun(shaderProgram);
+    }
 }

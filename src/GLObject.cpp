@@ -1,8 +1,18 @@
 #include "GLObject.h"
+#include <math.h>
+
+void test(GLuint shaderProgram)
+{
+    float timeValue = glfwGetTime();
+    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "uColor");
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+}
 
 GLObject::GLObject(float m_vertices[], GLuint verSize, string shaderName)
 {
-    shader = new ShaderManager(shaderName);
+    ConfigUniform cunf = test;
+    shader = new ShaderManager(shaderName, cunf);
 
     glGenVertexArrays(1, &vao); //获取vao index
     glBindVertexArray(vao);     //绑定 启用 index

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "GLManager.h"
 #include "GLObject.h"
+#include "ShaderManager.h"
 using namespace std;
 
 void engineTestRender(GLManager *glManager);
@@ -16,7 +17,6 @@ int main()
     if (initSuccess)
     {
         cout << "Init GLEngine Success!" << endl;
-
         engineTestRender(glManager);
     }
 
@@ -27,14 +27,11 @@ int main()
 
 void engineTestRender(GLManager *glManager)
 {
-    glManager->setLineMode(true);
-
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, // left
         0.5f, -0.5f, 0.0f,  // right
         0.0f, 0.5f, 0.0f    // top
     };
     GLObject *obj1 = new GLObject(vertices, sizeof(vertices), "test");
-
     glManager->renderLoop(obj1);
 }

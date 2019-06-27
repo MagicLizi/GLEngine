@@ -8,13 +8,15 @@
 #include <sstream>
 #include <list>
 using namespace std;
+typedef void (*ConfigUniform)(GLuint shaderProgram);
 class ShaderManager
 {
 public:
     string basicPath = "src/shaders/";
-    ShaderManager(string name);
+    ShaderManager(string name, ConfigUniform m_cufun);
     GLuint shaderProgram;
     void useShader();
+    ConfigUniform cufun;
 
 private:
     void initShaderProgram();
