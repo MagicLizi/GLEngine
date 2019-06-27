@@ -22,11 +22,11 @@ public:
     void renderLoop(GLObject *drawObj);
     void setLineMode(bool line);
     void setBackgroundColor(EngineColor color);
-    GLFWwindow *glWindow;
 
 private:
     int width;
     int height;
+    GLFWwindow *glWindow;
     EngineColor backgroundColor = {0, 0, 0, 0};
     bool initGLFW();
     bool initGLAD();

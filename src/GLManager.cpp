@@ -20,10 +20,6 @@ bool GLManager::init()
 {
     bool result = initGLFW() & initGLAD();
     cout << "GLManager::init Result:" << result << endl;
-    if (result)
-    {
-        setGLViewPortAndCallbacks();
-    }
     return result;
 }
 
@@ -44,6 +40,7 @@ bool GLManager::initGLFW()
         return false;
     }
     glfwMakeContextCurrent(glWindow);
+    setGLViewPortAndCallbacks();
     return true;
 }
 
@@ -117,7 +114,6 @@ void GLManager::setLineMode(bool line)
 
 void GLManager::setGLViewPortAndCallbacks()
 {
-    glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(glWindow, framebuffer_size_callback);
 }
 
