@@ -2,7 +2,7 @@
 #define GLMANAGER_H
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-
+#include "GLObject.h"
 struct EngineColor
 {
     GLfloat r;
@@ -19,14 +19,14 @@ public:
     bool init();
     void terminate();
     void version();
-    void renderLoop();
+    void renderLoop(GLObject *drawObj);
     void setLineMode(bool line);
     void setBackgroundColor(EngineColor color);
+    GLFWwindow *glWindow;
 
 private:
     int width;
     int height;
-    GLFWwindow *glWindow;
     EngineColor backgroundColor = {0, 0, 0, 0};
     bool initGLFW();
     bool initGLAD();

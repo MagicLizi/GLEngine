@@ -1,5 +1,7 @@
 #include "GLManager.h"
 #include <iostream>
+#include "ShaderManager.h"
+#include "GLObject.h"
 using namespace std;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -74,16 +76,20 @@ void GLManager::version()
     std::cout << "Maximum nr of vertex attributes supported: " << nVertexAtrributes << std::endl;
 }
 
-void GLManager::renderLoop()
+void GLManager::renderLoop(GLObject *drawObj)
 {
+
     while (!glfwWindowShouldClose(glWindow))
     {
         //处理输入
         processInput();
 
         //清除背景
-        glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.alpha); //设置缓冲区颜色
-        glClear(GL_COLOR_BUFFER_BIT);                                                                 //用设置的颜色清除颜色缓冲区
+        glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.alpha);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        //draw
+        drawObj->draw();
 
         //交换缓冲区
         glfwSwapBuffers(glWindow);

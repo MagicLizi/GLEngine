@@ -1,5 +1,6 @@
 #ifndef SHADER_MANAGER_H
 #define SHADER_MANAGER_H
+#define GL_SILENCE_DEPRECATION
 #include <string>
 #include "GLFW/glfw3.h"
 #include <fstream>

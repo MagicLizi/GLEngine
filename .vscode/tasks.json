@@ -24,9 +24,9 @@
                 "${workspaceFolder}/src/*.cpp",
                 "${workspaceFolder}/main.cpp",
                 "-o",
-                "${workspaceFolder}/bin/main",
-                "-g",
-                "-v"
+                "${workspaceFolder}/bin/main"
+                // "-g",
+                // "-v"
             ],
             "group": {
                 "kind": "build",

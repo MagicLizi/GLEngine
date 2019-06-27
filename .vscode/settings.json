@@ -53,4 +53,5 @@
         "sstream": "cpp",
         "list": "cpp"
     },
+    "editor.formatOnSave": true,
 }

@@ -1,24 +1,40 @@
 #include <iostream>
 #include "GLManager.h"
-#include "ShaderManager.h"
+#include "GLObject.h"
 using namespace std;
+
+void engineTestRender(GLManager *glManager);
 
 int main()
 {
     cout << "Begin GLEngine" << endl;
-    GLManager glManager(1280, 700);
 
-    bool initSuccess = glManager.init();
+    GLManager *glManager = new GLManager(1280, 800);
+
+    bool initSuccess = glManager->init();
 
     if (initSuccess)
     {
-        glManager.version();
         cout << "Init GLEngine Success!" << endl;
-        EngineColor bColor = {1, 1, 1, 0.5};
-        glManager.setBackgroundColor(bColor);
-        glManager.renderLoop();
+
+        engineTestRender(glManager);
     }
 
-    glManager.terminate();
+    glManager->terminate();
+
     return 0;
+}
+
+void engineTestRender(GLManager *glManager)
+{
+    glManager->setLineMode(true);
+
+    float vertices[] = {
+        -0.5f, -0.3f, 0.0f, // left
+        0.5f, -0.5f, 0.0f,  // right
+        0.0f, 0.5f, 0.0f    // top
+    };
+    GLObject *obj1 = new GLObject(vertices, sizeof(vertices), "test");
+
+    glManager->renderLoop(obj1);
 }

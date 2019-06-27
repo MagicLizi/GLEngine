@@ -4,27 +4,21 @@
 #include <sstream>
 using namespace std;
 
+void testSize(float mvertices[]);
+
 int main()
 {
-    string path = "src/shaders/test.vert";
-    cout << "loadShaderCode from:" << path << endl;
-    string shaderCode;
-    ifstream fileStream;
-    fileStream.exceptions(ifstream::badbit);
-    try
-    {
-        fileStream.open(path);
-        ostringstream codeStream;
-        codeStream << fileStream.rdbuf();
-        fileStream.close();
-
-        shaderCode = codeStream.str();
-        cout << "load Code success \n"
-             << shaderCode << endl;
-    }
-    catch (ifstream::failure e)
-    {
-        cout << "load Code error " << endl;
-    }
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f, // left
+        0.5f, -0.5f, 0.0f,  // right
+        0.0f, 0.5f, 0.0f    // top
+    };
+    cout << sizeof(vertices) << endl;
+    testSize(vertices);
     return 0;
+}
+
+void testSize(float mvertices[])
+{
+    cout << sizeof(mvertices) << endl;
 }
