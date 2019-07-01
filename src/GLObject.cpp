@@ -17,7 +17,7 @@ GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint i
     ConfigUniform cunf = NULL; //设置uniform
     shader = new ShaderManager(shaderName, cunf);
     //加载纹理
-    // createTexture(texturePath);
+    createTexture(texturePath);
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -31,8 +31,11 @@ GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint i
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceSize, m_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
