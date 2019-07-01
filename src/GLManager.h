@@ -19,7 +19,7 @@ public:
     bool init();
     void terminate();
     void version();
-    void renderLoop(GLObject *drawObj);
+    void renderLoop(GLObject *drawObj, bool index);
     void setLineMode(bool line);
     void setBackgroundColor(EngineColor color);
 

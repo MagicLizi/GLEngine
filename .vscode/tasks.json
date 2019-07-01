@@ -21,6 +21,7 @@
                 "-I",
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/lib/*.c",
+                // "${workspaceFolder}/lib/*.cpp",
                 "${workspaceFolder}/src/*.cpp",
                 "${workspaceFolder}/main.cpp",
                 "-o",

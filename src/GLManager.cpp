@@ -73,7 +73,7 @@ void GLManager::version()
     std::cout << "Maximum nr of vertex attributes supported: " << nVertexAtrributes << std::endl;
 }
 
-void GLManager::renderLoop(GLObject *drawObj)
+void GLManager::renderLoop(GLObject *drawObj, bool index)
 {
 
     while (!glfwWindowShouldClose(glWindow))
@@ -86,7 +86,14 @@ void GLManager::renderLoop(GLObject *drawObj)
         glClear(GL_COLOR_BUFFER_BIT);
 
         //draw
-        drawObj->draw();
+        if (index)
+        {
+            drawObj->drawIndex();
+        }
+        else
+        {
+            drawObj->draw();
+        }
 
         //交换缓冲区
         glfwSwapBuffers(glWindow);
