@@ -6,7 +6,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <list>
 using namespace std;
 typedef void (*ConfigUniform)(GLuint shaderProgram);
 class ShaderManager
@@ -17,6 +16,7 @@ public:
     GLuint shaderProgram;
     void useShader();
     ConfigUniform cufun;
+    void setInt(string name, int value);
 
 private:
     void initShaderProgram();

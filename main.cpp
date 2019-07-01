@@ -40,6 +40,6 @@ void engineTestRender(GLManager *glManager)
         1, 2, 3  // 第二个三角形
     };
 
-    GLObject *obj1 = new GLObject(vertices, sizeof(vertices), indexVec, sizeof(indexVec), "test", "src/resources/container.jpg");
+    GLObject *obj1 = new GLObject(vertices, sizeof(vertices), indexVec, sizeof(indexVec), "test", {"src/resources/container.jpg", "src/resources/awesomeface.png"});
     glManager->renderLoop(obj1, true);
 }

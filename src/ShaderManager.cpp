@@ -70,3 +70,8 @@ void ShaderManager::useShader()
         cufun(shaderProgram);
     }
 }
+
+void ShaderManager::setInt(string name, int value)
+{
+    glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), value);
+}

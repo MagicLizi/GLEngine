@@ -11,7 +11,7 @@ void test(GLuint shaderProgram)
     glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 }
 
-GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint indiceSize, string shaderName, const char *texturePath)
+GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint indiceSize, string shaderName, list<string> tpaths)
 {
     //加载shader
     ConfigUniform cunf = NULL; //设置uniform
@@ -39,7 +39,19 @@ GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint i
     glEnableVertexAttribArray(2);
 
     //加载纹理
-    createTexture(texturePath);
+    shader->useShader();
+    list<string>::iterator it;
+    int i = 0;
+    for (it = tpaths.begin(); it != tpaths.end(); it++)
+    {
+        const char *p = it->c_str();
+        GLuint texture = createTexture(p);
+        string textureName = "texture";
+        textureName = textureName.append(to_string(i));
+        shader->setInt(textureName, i);
+        textures.push_back(texture);
+        i++;
+    }
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -73,7 +85,7 @@ GLObject::~GLObject()
 {
 }
 
-void GLObject::createTexture(const char *texturePath)
+GLuint GLObject::createTexture(const char *texturePath)
 {
     GLuint texture;
     glGenTextures(1, &texture);
@@ -88,9 +100,17 @@ void GLObject::createTexture(const char *texturePath)
 
     int width, height, nrChannels;
     unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+    stbi_set_flip_vertically_on_load(true);
     if (data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        if (nrChannels == 3)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        }
+        else
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        }
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
@@ -98,10 +118,20 @@ void GLObject::createTexture(const char *texturePath)
         cout << "cannot load texture:" << texturePath << endl;
     }
     stbi_image_free(data);
+    return texture;
 }
 
 void GLObject::drawIndex()
 {
+    //texture
+    list<GLuint>::iterator it;
+    int i = 0;
+    for (it = textures.begin(); it != textures.end(); it++)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, *it);
+        i++;
+    }
     shader->useShader();
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
