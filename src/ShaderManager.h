@@ -20,8 +20,6 @@ public:
 
 private:
     void initShaderProgram();
-    const GLchar *loadShaderCode(string filePath);
-    GLuint loadShader(const char *shaderSource, GLenum shaderType);
-    GLuint loadShaderProgram(list<unsigned int> shaders);
+    GLuint loadShader(string filePath, GLenum shaderType);
 };
 #endif

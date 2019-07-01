@@ -2,20 +2,33 @@
 ShaderManager::ShaderManager(string name, ConfigUniform m_cufun = NULL)
 {
     cufun = m_cufun;
+    string vPath = basicPath + name + ".vert";
+    string fPath = basicPath + name + ".frag";
+    GLuint vertexShader = loadShader(vPath, GL_VERTEX_SHADER);
+    GLuint fragmentShader = loadShader(fPath, GL_FRAGMENT_SHADER);
 
-    GLuint vertexShader = loadShader(loadShaderCode(basicPath + name + ".vert"), GL_VERTEX_SHADER);
-    GLuint fragmentShader = loadShader(loadShaderCode(basicPath + name + ".frag"), GL_FRAGMENT_SHADER);
+    shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
 
-    list<GLuint> shaders;
-    shaders.push_back(vertexShader);
-    shaders.push_back(fragmentShader);
-    shaderProgram = loadShaderProgram(shaders);
+    int success;
+    char infoLog[512];
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(shaderProgram, 1024, NULL, infoLog);
+        cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << infoLog << endl;
+    }
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 }
 
-const GLchar *ShaderManager::loadShaderCode(string filePath)
+GLuint ShaderManager::loadShader(string filePath, GLenum shaderType)
 {
     cout << "loadShaderCode from:" << filePath << endl;
-    string shaderCode;
+    string str;
     ifstream fileStream;
     fileStream.exceptions(ifstream::badbit);
     try
@@ -23,23 +36,20 @@ const GLchar *ShaderManager::loadShaderCode(string filePath)
         fileStream.open(filePath);
         ostringstream codeStream;
         codeStream << fileStream.rdbuf();
+        codeStream << '\0';
         fileStream.close();
 
-        shaderCode = codeStream.str();
-        cout << "load Code success length:" << shaderCode.length() << endl;
-        // cout << shaderCode << endl;
+        str = codeStream.str();
+        cout << "load Code success length:" << str.length() << endl;
+        cout << str << endl;
     }
     catch (ifstream::failure e)
     {
         cout << "load Code error " << endl;
     }
-    return shaderCode.c_str();
-}
-
-GLuint ShaderManager::loadShader(const char *shaderSource, GLenum shaderType)
-{
+    const char *shaderCode = str.c_str();
     GLuint shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &shaderSource, NULL);
+    glShaderSource(shader, 1, &shaderCode, NULL);
     glCompileShader(shader);
     int success;
     char infoLog[512];
@@ -50,32 +60,6 @@ GLuint ShaderManager::loadShader(const char *shaderSource, GLenum shaderType)
         cout << "compile shader error" << infoLog << endl;
     }
     return shader;
-}
-
-//加载shader program
-GLuint ShaderManager::loadShaderProgram(list<GLuint> shaders)
-{
-    GLuint shaderProgram = glCreateProgram();
-    list<GLuint>::iterator it;
-    for (it = shaders.begin(); it != shaders.end(); it++)
-    {
-        glAttachShader(shaderProgram, *it);
-    }
-    glLinkProgram(shaderProgram);
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        cout << "create shader program error" << infoLog << endl;
-    }
-
-    //清理shader
-    for (it = shaders.begin(); it != shaders.end(); it++)
-    {
-        glDeleteShader(*it);
-    }
-    return shaderProgram;
 }
 
 void ShaderManager::useShader()
