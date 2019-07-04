@@ -75,3 +75,13 @@ void ShaderManager::setInt(string name, int value)
 {
     glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()), value);
 }
+
+void ShaderManager::setMatrix(string name, const GLfloat *matrix)
+{
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, name.c_str()), 1, GL_FALSE, matrix);
+}
+
+void ShaderManager::setVec3(string name, float x, float y, float z)
+{
+    glUniform3f(glGetUniformLocation(shaderProgram, name.c_str()), x, y, z);
+}

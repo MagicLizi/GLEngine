@@ -11,6 +11,59 @@ void test(GLuint shaderProgram)
     glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 }
 
+glm::mat4 transformTest()
+{
+    glm::mat4 idMat = glm::mat4(1.0);
+    idMat = glm::rotate(idMat, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    // idMat = glm::translate(idMat, glm::vec3(0.25, 0, 0));
+    idMat = glm::scale(idMat, glm::vec3(0.5, 0.5, 0.5));
+    return idMat;
+}
+
+glm::mat4 modelMatTest()
+{
+    glm::mat4 model = glm::mat4(1.0);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    return model;
+}
+
+glm::mat4 viewMatTest()
+{
+    glm::mat4 view = glm::mat4(1.0);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    return view;
+}
+
+void lightTest(ShaderManager *shader)
+{
+    shader->setVec3("objColor", 1.0f, 0.5f, 0.31f);
+    shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+}
+
+glm::mat4 projMatTest()
+{
+    glm::mat4 projection = glm::mat4(1.0);
+    projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float)800, 0.1f, 100.0f);
+    return projection;
+}
+
+glm::mat4 GLObject::updateTransform()
+{
+    glm::mat4 transMat = glm::mat4(1.0);
+    transMat = glm::rotate(transMat, glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    transMat = glm::rotate(transMat, glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    transMat = glm::rotate(transMat, glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    transMat = glm::translate(transMat, pos);
+    transMat = glm::scale(transMat, scale);
+    return transMat;
+}
+
+void GLObject::updateObjColor()
+{
+    shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    shader->setVec3("objColor", color.x, color.y, color.z);
+}
+
 GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint indiceSize, string shaderName, list<string> tpaths)
 {
     //加载shader
@@ -40,6 +93,11 @@ GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint i
 
     //加载纹理
     shader->useShader();
+    shader->setMatrix("transform", glm::value_ptr(updateTransform()));
+    shader->setMatrix("model", glm::value_ptr(modelMatTest()));
+    shader->setMatrix("view", glm::value_ptr(viewMatTest()));
+    shader->setMatrix("proj", glm::value_ptr(projMatTest()));
+    updateObjColor();
     list<string>::iterator it;
     int i = 0;
     for (it = tpaths.begin(); it != tpaths.end(); it++)
@@ -121,6 +179,18 @@ GLuint GLObject::createTexture(const char *texturePath)
     return texture;
 }
 
+void GLObject::render()
+{
+    if (isIndex)
+    {
+        drawIndex();
+    }
+    else
+    {
+        draw();
+    }
+}
+
 void GLObject::drawIndex()
 {
     //texture
@@ -133,8 +203,10 @@ void GLObject::drawIndex()
         i++;
     }
     shader->useShader();
+    shader->setMatrix("transform", glm::value_ptr(updateTransform()));
+    updateObjColor();
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 

@@ -17,6 +17,8 @@ public:
     void useShader();
     ConfigUniform cufun;
     void setInt(string name, int value);
+    void setMatrix(string name, const GLfloat *matrix);
+    void setVec3(string name, float x, float y, float z);
 
 private:
     void initShaderProgram();

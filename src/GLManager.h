@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "GLObject.h"
+#include <list>
 struct EngineColor
 {
     GLfloat r;
@@ -19,7 +20,7 @@ public:
     bool init();
     void terminate();
     void version();
-    void renderLoop(GLObject *drawObj, bool index);
+    void renderLoop(list<GLObject> drawObjs);
     void setLineMode(bool line);
     void setBackgroundColor(EngineColor color);
 
