@@ -51,7 +51,7 @@ glm::mat4 GLObject::updateTransform()
 {
     glm::mat4 transMat = glm::mat4(1.0);
     transMat = glm::rotate(transMat, glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    transMat = glm::rotate(transMat, glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    transMat = glm::rotate(transMat, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     transMat = glm::rotate(transMat, glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
     transMat = glm::translate(transMat, pos);
     transMat = glm::scale(transMat, scale);
@@ -60,12 +60,12 @@ glm::mat4 GLObject::updateTransform()
 
 void GLObject::updateObjColor()
 {
-    shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
     shader->setVec3("objColor", color.x, color.y, color.z);
 }
 
 GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint indiceSize, string shaderName, list<string> tpaths)
 {
+    drawSize = indiceSize;
     //加载shader
     ConfigUniform cunf = NULL; //设置uniform
     shader = new ShaderManager(shaderName, cunf);
@@ -82,21 +82,30 @@ GLObject::GLObject(float m_vertices[], GLuint verSize, int m_indices[], GLuint i
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceSize, m_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+    // glEnableVertexAttribArray(2);
 
     //加载纹理
     shader->useShader();
-    shader->setMatrix("transform", glm::value_ptr(updateTransform()));
-    shader->setMatrix("model", glm::value_ptr(modelMatTest()));
+    shader->setMatrix("model", glm::value_ptr(updateTransform()));
     shader->setMatrix("view", glm::value_ptr(viewMatTest()));
     shader->setMatrix("proj", glm::value_ptr(projMatTest()));
+
+    //设置光照
+    shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    shader->setVec3("lightPos", 1.2f, 1.0f, 2.0f);
+    shader->setVec3("viewPos", 0, 0, 10);
+    shader->setVec3("material.ambient", 1.0f, 1.0f, 1.0f);
+    shader->setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
+    shader->setVec3("material.specular", 0.5, 0.5, 0.5);
+    shader->setFloat("material.shininess", 32.0f);
+
     updateObjColor();
     list<string>::iterator it;
     int i = 0;
@@ -131,9 +140,6 @@ GLObject::GLObject(float m_vertices[], GLuint verSize, string shaderName)
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -203,18 +209,20 @@ void GLObject::drawIndex()
         i++;
     }
     shader->useShader();
-    shader->setMatrix("transform", glm::value_ptr(updateTransform()));
+    shader->setMatrix("model", glm::value_ptr(updateTransform()));
     updateObjColor();
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, drawSize, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 void GLObject::draw()
 {
     shader->useShader();
+    shader->setMatrix("model", glm::value_ptr(updateTransform()));
+    updateObjColor();
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, drawSize);
     glBindVertexArray(0);
 }
 

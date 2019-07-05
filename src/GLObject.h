@@ -32,5 +32,6 @@ private:
     ShaderManager *shader;
     GLuint createTexture(const char *texturePath);
     list<GLuint> textures;
+    int drawSize;
 };
 #endif
